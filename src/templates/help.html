@@ -124,6 +124,54 @@
             transition: all 0.3s ease;
         }
 
+                /* Toggle switch styling for dark mode */
+                .mode-switch {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background-color: #3a86ff; /* Blue for "on" state (dark mode) */
+        }
+
+        .dark .toggle-switch {
+            background-color: #4b5563; /* Gray for "off" state in dark mode */
+        }
+
+        .dark .toggle-switch.active {
+            background-color: #60a5fa; /* Lighter blue for "on" state in dark mode */
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+
         /* Style for the help section */
         .help-section {
             margin-bottom: 30px;
@@ -185,10 +233,10 @@
                 <p class="app-name">Product Dashboard</p>
             </div>
             <div class="app-header-right">
-                <button class="mode-switch" title="Switch Theme">
-                    <svg class="moon" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-                    </svg>
+                <button class="mode-switch" title="Toggle Dark Mode">
+                    <span class="toggle-switch">
+                        <span class="toggle-slider"></span>
+                    </span>
                 </button>
             </div>
         </div>
