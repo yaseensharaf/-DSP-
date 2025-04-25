@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="{{ dark_mode }}">
+<head>
+    <meta charset="UTF-8">
+    <title>All Products - Product Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Main.css') }}" />
+    <style>
+        .box-content-subheader.price { display: none; }
+
+        #image-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #product-image {
+            max-width: 300px;
+            border-radius: 10px;
+        }
+
+        /* Search bar styling to match existing design */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 6px 10px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .dark .search-bar {
+            background: #2d3748;
+            border: 1px solid #3f4756;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            font-size: 14px;
+            color: var(--main-color);
+            outline: none;
+            width: 150px;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--secondary-color);
+            opacity: 0.7;
+        }
+
+        .search-bar:hover {
+            background: #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .search-bar:hover {
+            background: #3f4756;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Store filter styling */
+        .store-filter {
+            display: flex;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 6px 10px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .dark .store-filter {
+            background: #2d3748;
+            border: 1px solid #3f4756;
+        }
+
+        .store-filter select {
+            border: none;
+            background: transparent;
+            padding: 5px;
+            font-size: 14px;
+            color: var(--main-color);
+            outline: none;
+            width: 120px;
+            cursor: pointer;
+        }
+
+        .store-filter:hover {
+            background: #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .store-filter:hover {
+            background: #3f4756;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Existing styles */
+        .project-box {
+            border-radius: 30px;
+            padding: 20px;
+            background-color: #f5f7fa;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e9ecef;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .project-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .show-graph-btn {
+            background-color: #3a86ff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .show-graph-btn:hover {
+            background-color: #2a75f3;
+        }
+
+        .dark .project-box {
+            background-color: #2d3748;
+            border: 1px solid #3f4756;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .project-box:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .show-graph-btn {
+            background-color: #4c5359;
+        }
+
+        .dark .show-graph-btn:hover {
+            background-color: #3182ce;
+        }
+
+        .app-sidebar {
+            padding: 40px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            background-color: var(--sidebar-bg);
+            width: 80px;
+            transition: all 0.3s ease;
+            border-right: none;
+        }
+
+        .app-sidebar-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background-color: transparent;
+            color: var(--link-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .app-sidebar-link:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .app-sidebar-link.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.25);
+        }
+
+        .dark .app-sidebar-link:hover {
+            background-color: rgba(96, 165, 250, 0.15);
+            color: #60a5fa;
+        }
+
+        .dark .app-sidebar-link.active {
+            background-color: #60a5fa;
+            color: #1f1d2b;
+            box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
+        }
+
+        .app-sidebar-link svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .app-sidebar-link.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 4px;
+            height: 24px;
+            background-color: #3b82f6;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .dark .app-sidebar-link.active::before {
+            background-color: #60a5fa;
+        }
+
+        .app-sidebar-link svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+            fill: none;
+        }
+
+        .app-sidebar-link:hover svg {
+            filter: drop-shadow(0 0 2px currentColor);
+        }
+
+        .app-sidebar-link.active svg {
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 1px currentColor);
+            }
+            100% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 4px currentColor);
+            }
+        }
+
+        .app-sidebar-link svg * {
+            transition: all 0.3s ease;
+        }
+
+        #image-container {
+            display: none;
+            width: 100%;
+            margin-top: 30px;
+            padding: 30px 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        #product-image {
+            max-width: 90%;
+            height: auto;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #back-btn {
+            margin-top: 20px;
+            padding: 8px 20px;
+            font-size: 14px;
+            background-color: #3a86ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #back-btn:hover {
+            background-color: #2a75f3;
+        }
+
+        .dark #image-container {
+            background-color: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .dark #back-btn {
+            background-color: #4b5563;
+            color: #f8fafc;
+        }
+
+        .dark #back-btn:hover {
+            background-color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <div class="app-header-left">
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <p class="app-name">Product Dashboard</p>
+            </div>
+            <div class="app-header-right">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search products...">
+                </div>
+                <div class="store-filter">
+                    <select id="store-filter">
+                        <option value="all">All Stores</option>
+                        <option value="H&M">H&M</option>
+                        <option value="Retail Store 1">Retail Store 1</option>
+                        <option value="Retail Store 2">Retail Store 2</option>
+                    </select>
+                </div>
+                <button class="mode-switch" title="Switch Theme">
+                    <svg class="moon" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="app-content">
+            <div class="app-sidebar">
+                <a href="index.html" class="app-sidebar-link" data-tooltip="Home">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </a>
+                <a href="trending.html" class="app-sidebar-link" data-tooltip="Trending">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 17 9 11 13 15 21 7"/>
+                        <circle cx="3" cy="17" r="2"/>
+                        <circle cx="9" cy="11" r="2"/>
+                        <circle cx="13" cy="15" r="2"/>
+                        <circle cx="21" cy="7" r="2"/>
+                    </svg>
+                </a>
+                <a href="recommend.html" class="app-sidebar-link" data-tooltip="Top-Selling">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="7" width="18" height="14" rx="2" ry="2"/>
+                        <path d="M12 3v4M9 5h6"/>
+                    </svg>
+                </a>
+                <a href="all_products.html" class="app-sidebar-link active" data-tooltip="All Products">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                        <polyline points="13 2 13 9 20 9"/>
+                    </svg>
+                </a>
+                <a href="lowest.html" class="app-sidebar-link" data-tooltip="Lowest-Selling">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="21 17 15 11 11 15 3 7"/>
+                        <circle cx="21" cy="17" r="2"/>
+                        <circle cx="15" cy="11" r="2"/>
+                        <circle cx="11" cy="15" r="2"/>
+                        <circle cx="3" cy="7" r="2"/>
+                    </svg>
+                </a>
+                <a href="help.html" class="app-sidebar-link" data-tooltip="Help">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer Circle -->
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                        
+                        <!-- Question Mark with better proportions -->
+                        <path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2.5-2.5 3-0.5 0.25-0.5 0.5-0.5 1.5" 
+                              stroke="currentColor" 
+                              stroke-width="2" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round" />
+                        
+                        <!-- Question Mark Dot -->
+                        <circle cx="11.5" cy="17.5" r="0.75" fill="currentColor" stroke="currentColor" stroke-width="0.5" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="projects-section">
+                <div class="projects-section-header">
+                    <p>All Products from All Stores</p>
+                    <p class="time">{{ today }}</p>
+                </div>
+                <div class="project-boxes jsGridView" id="project-boxes">
+                    {% for product in products %}
+                    <div class="project-box-wrapper" data-product-name="{{ product.ProductName }}" data-category="{{ product.Category }}" data-store="{{ product.Store }}">
+                        <div class="project-box">
+                            <div class="project-box-content-header">
+                                <p class="box-content-header">{{ product.ProductName }}</p>
+                                <p class="box-content-subheader">Category: {{ product.Category }}</p>
+                                <p class="box-content-subheader">Store: {{ product.Store }}</p>
+                                <button class="show-graph-btn" onclick="event.stopPropagation(); showProductImage('{{ product.ProductName }}')">Show Image</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Image Container -->
+                <div id="image-container">
+                    <div style="max-width: 800px; margin: 0 auto;"></div>
+                    <h2 id="image-title"></h2>
+                    <img id="product-image" src="" alt="Product Image">
+                    <br>
+                    <button id="back-btn" class="show-graph-btn" onclick="goBackToList()">Back to Product List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        function showProductImage(productName) {
+            fetch(`/product_image/${encodeURIComponent(productName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    document.getElementById('image-title').innerText = `Image for ${productName}`;
+                    const img = document.getElementById('product-image');
+                    img.src = data.image_url;
+                    img.style.display = 'block';
+                    document.getElementById('image-container').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error loading image:', error);
+                });
+        }
+
+        function goBackToList() {
+            document.getElementById('image-container').style.display = 'none';
+        }
+
+        function filterProjects() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const storeFilter = document.getElementById('store-filter').value.toLowerCase();
+            const allProjects = Array.from(document.querySelectorAll('.project-box-wrapper'));
+
+            allProjects.forEach(project => {
+                const productName = project.dataset.productName.toLowerCase();
+                const category = project.dataset.category.toLowerCase();
+                const store = project.dataset.store.toLowerCase();
+
+                const matchesSearch = productName.includes(searchTerm) || category.includes(searchTerm);
+                const matchesStore = storeFilter === 'all' || store === storeFilter;
+
+                project.style.display = (matchesSearch && matchesStore) ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('search-input').addEventListener('input', filterProjects);
+        document.getElementById('store-filter').addEventListener('change', filterProjects);
+
+        // Toggle sidebar on mobile
+        document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+            document.querySelector('.app-sidebar').classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 720 && !e.target.closest('.app-sidebar') && !e.target.closest('.sidebar-toggle')) {
+                document.querySelector('.app-sidebar').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

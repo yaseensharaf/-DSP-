@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="{{ dark_mode }}">
+<head>
+    <title>Help - Product Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Main.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Hide the price without deleting it */
+        .box-content-subheader.price {
+            display: none;
+        }
+
+        /* Ensure the grid content doesn't overflow */
+        .app-content {
+            overflow-x: hidden; /* Hide the horizontal overflow */
+        }
+
+        /* Improved sidebar styling */
+        .app-sidebar {
+            padding: 40px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            background-color: var(--sidebar-bg);
+            width: 80px;
+            transition: all 0.3s ease;
+            border-right: none;
+        }
+        
+        /* Icon styling */
+        .app-sidebar-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px; /* Squared with rounded corners */
+            background-color: transparent;
+            color: var(--link-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Hover state */
+        .app-sidebar-link:hover {
+            background-color: rgba(59, 130, 246, 0.1); /* Light blue background */
+            color: #3b82f6; /* Bright blue icon */
+            transform: translateY(-2px); /* Slight hover animation */
+        }
+        
+        /* Active state */
+        .app-sidebar-link.active {
+            background-color: #3b82f6; /* Bright blue background */
+            color: white; /* White icon */
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.25); /* Subtle shadow */
+        }
+        
+        /* Dark mode adjustments */
+        .dark .app-sidebar-link:hover {
+            background-color: rgba(96, 165, 250, 0.15);
+            color: #60a5fa;
+        }
+        
+        .dark .app-sidebar-link.active {
+            background-color: #60a5fa;
+            color: #1f1d2b; /* Dark background color */
+            box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
+        }
+        
+        /* Icon size */
+        .app-sidebar-link svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Active indicator line */
+        .app-sidebar-link.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 4px;
+            height: 24px;
+            background-color: #3b82f6;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .dark .app-sidebar-link.active::before {
+            background-color: #60a5fa;
+        }
+        
+        /* Base icon styling */
+        .app-sidebar-link svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+            fill: none;
+        }
+        
+        /* Hover animation */
+        .app-sidebar-link:hover svg {
+            filter: drop-shadow(0 0 2px currentColor);
+        }
+        
+        /* Active state with pulsing animation */
+        .app-sidebar-link.active svg {
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 1px currentColor);
+            }
+            100% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 4px currentColor);
+            }
+        }
+        
+        /* Make filled parts of SVG adapt to color scheme too */
+        .app-sidebar-link svg * {
+            transition: all 0.3s ease;
+        }
+
+        /* Style for the help section */
+        .help-section {
+            margin-bottom: 30px;
+        }
+
+        .help-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--main-color);
+            margin-bottom: 10px;
+        }
+
+        .help-section p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .help-section ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .help-section ul li {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .help-section a {
+            color: #3a86ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .help-section a:hover {
+            text-decoration: underline;
+        }
+
+        .dark .help-section a {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <div class="app-header-left">
+                <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <p class="app-name">Product Dashboard</p>
+            </div>
+            <div class="app-header-right">
+                <button class="mode-switch" title="Switch Theme">
+                    <svg class="moon" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <div class="app-sidebar">
+                <a href="index.html" class="app-sidebar-link" data-tooltip="Home">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </a>
+                <a href="trending.html" class="app-sidebar-link" data-tooltip="Trending">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 17 9 11 13 15 21 7"/>
+                        <circle cx="3" cy="17" r="2"/>
+                        <circle cx="9" cy="11" r="2"/>
+                        <circle cx="13" cy="15" r="2"/>
+                        <circle cx="21" cy="7" r="2"/>
+                    </svg>
+                </a>
+                <a href="recommend.html" class="app-sidebar-link" data-tooltip="Top-Selling">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="7" width="18" height="14" rx="2" ry="2"/>
+                        <path d="M12 3v4M9 5h6"/>
+                    </svg>
+                </a>
+                <a href="all_products.html" class="app-sidebar-link" data-tooltip="All Products">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                        <polyline points="13 2 13 9 20 9"/>
+                    </svg>
+                </a>
+                <a href="lowest.html" class="app-sidebar-link" data-tooltip="Lowest-Selling">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="21 17 15 11 11 15 3 7"/>
+                        <circle cx="21" cy="17" r="2"/>
+                        <circle cx="15" cy="11" r="2"/>
+                        <circle cx="11" cy="15" r="2"/>
+                        <circle cx="3" cy="7" r="2"/>
+                    </svg>
+                </a>
+                <a href="help.html" class="app-sidebar-link active" data-tooltip="Help">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer Circle -->
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                        
+                        <!-- Question Mark with better proportions -->
+                        <path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2.5-2.5 3-0.5 0.25-0.5 0.5-0.5 1.5" 
+                              stroke="currentColor" 
+                              stroke-width="2" 
+                              stroke-linecap="round" 
+                              stroke-linejoin="round" />
+                        
+                        <!-- Question Mark Dot -->
+                        <circle cx="11.5" cy="17.5" r="0.75" fill="currentColor" stroke="currentColor" stroke-width="0.5" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="projects-section">
+                <div class="projects-section-header">
+                    <p>Help - Guide to Product Dashboard</p>
+                    <p class="time">{{ today }}</p>
+                </div>
+                <div class="help-section">
+                    <h3><a href="index.html">Home (Product List)</a></h3>
+                    <p>The Home page displays a list of all products available at H&M, including their categories. This page helps you explore the full range of H&M products in one place.</p>
+                    <ul>
+                        <li><strong>View Products</strong>: Browse through all H&M products, with each product card showing the product name and category.</li>
+                        <li><strong>Search Products</strong>: Use the search bar at the top to find products by name or category. For example, type "shirt" to see all shirts available.</li>
+                        <li><strong>Filter by Store</strong>: Use the store filter dropdown to view products from H&M (this page only shows H&M products, so other store selections will show no results).</li>
+                        <li><strong>View Product Images</strong>: Click the "Show Image" button on any product card to view an image of the product. Click "Back to Product List" to return to the list.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><a href="trending.html">Trending Products</a></h3>
+                    <p>The Trending Products page shows the top 15 products with the highest sales across all stores (H&M, Retail Store 1, and Retail Store 2) since January 2023. This helps you identify the most popular products across all stores.</p>
+                    <ul>
+                        <li><strong>View Trending Products</strong>: See the top 15 products ranked by total sales, with each card displaying the product name and the store it belongs to.</li>
+                        <li><strong>Search Products</strong>: Use the search bar to filter the list by product name. For example, search for "jeans" to see if any jeans are trending.</li>
+                        <li><strong>Filter by Store</strong>: Use the store filter dropdown to view trending products from a specific store (H&M, Retail Store 1, or Retail Store 2), or select "All Stores" to see the full list.</li>
+                        <li><strong>View Product Images</strong>: Click the "Show Image" button on a product card to see its image. Click "Back to Trending Products" to return to the list.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><a href="recommend.html">Top-Selling Products</a></h3>
+                    <p>The Top-Selling Products page highlights the top 5 best-selling products from Retail Store 1 and Retail Store 2 since January 2023. This page is useful for identifying high-performing products in these specific stores.</p>
+                    <ul>
+                        <li><strong>View Top-Selling Products</strong>: See the top 5 products from each store (Retail Store 1 and Retail Store 2), with each card showing the product name and store.</li>
+                        <li><strong>Search Products</strong>: Use the search bar to filter the list by product name. For example, search for "jacket" to see if any jackets are top-sellers.</li>
+                        <li><strong>Filter by Store</strong>: Use the store filter dropdown to view top-sellers from Retail Store 1 or Retail Store 2. Selecting "H&M" will show no results since this page only includes Retail Store 1 and Retail Store 2 products.</li>
+                        <li><strong>View Product Images</strong>: Click the "Show Image" button on a product card to view its image. Click "Back to Recommend products" to return to the list.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><a href="all_products.html">All Products</a></h3>
+                    <p>The All Products page provides a comprehensive list of products from all stores (H&M, Retail Store 1, and Retail Store 2), including their categories. This page is ideal for browsing the entire product catalog across all stores.</p>
+                    <ul>
+                        <li><strong>View All Products</strong>: Browse products from H&M, Retail Store 1, and Retail Store 2, with each card showing the product name, category, and store.</li>
+                        <li><strong>Search Products</strong>: Use the search bar to filter products by name or category. For example, search for "dress" to see all dresses across stores.</li>
+                        <li><strong>Filter by Store</strong>: Use the store filter dropdown to view products from a specific store (H&M, Retail Store 1, or Retail Store 2), or select "All Stores" to see the full list.</li>
+                        <li><strong>View Product Images</strong>: Click the "Show Image" button on a product card to view its image. Click "Back to Product List" to return to the list.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><a href="lowest.html">Lowest-Selling Products</a></h3>
+                    <p>The Lowest-Selling Products page lists the 5 products with the lowest sales from H&M since January 2023. This page helps identify underperforming products that may need attention.</p>
+                    <ul>
+                        <li><strong>View Lowest-Selling Products</strong>: See the 5 products with the lowest sales from H&M, with each card showing the product name and store (H&M).</li>
+                        <li><strong>Search Products</strong>: Use the search bar to filter the list by product name. For example, search for "scarf" to see if any scarves are underperforming.</li>
+                        <li><strong>Filter by Store</strong>: Use the store filter dropdown to view products from H&M (other store selections will show no results since this page only includes H&M products).</li>
+                        <li><strong>View Product Images</strong>: Click the "Show Image" button on a product card to view its image. Click "Back to Lowest-Selling Products" to return to the list.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><a href="help.html">Help</a></h3>
+                    <p>You're currently on the Help page! This page provides a detailed guide to navigating and using the Product Dashboard. Here are some general tips for using the dashboard:</p>
+                    <ul>
+                        <li><strong>Navigation</strong>: Use the sidebar on the left to navigate between different sections of the dashboard. On mobile devices, click the menu icon in the header to toggle the sidebar.</li>
+                        <li><strong>Dark Mode</strong>: Toggle between light and dark themes using the moon icon in the header for a more comfortable viewing experience.</li>
+                        <li><strong>Filtering and Searching</strong>: Most pages include a search bar and store filter dropdown at the top. Use these to quickly find products by name or filter by store.</li>
+                        <li><strong>Product Images</strong>: Click "Show Image" on any product card to view a product image. Use the "Back" button to return to the product list.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+        socket.on('data_updated', function(data) {
+            console.log('Data updated', data);
+        });
+
+        // Toggle sidebar on mobile
+        document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+            document.querySelector('.app-sidebar').classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 720 && !e.target.closest('.app-sidebar') && !e.target.closest('.sidebar-toggle')) {
+                document.querySelector('.app-sidebar').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
