@@ -175,6 +175,7 @@
             margin-right: auto;
             font-size: 12px;
             transition: background-color 0.2s;
+            font-weight: bold; /* Make button text bold */
         }
 
         .show-graph-btn:hover {
@@ -197,6 +198,20 @@
 
         .dark .show-graph-btn:hover {
             background-color: #3182ce;
+        }
+
+        /* Text color for light mode (black) */
+        .project-box .box-content-header,
+        .project-box .box-content-subheader {
+            color: #000000; /* Black text in light mode */
+            font-weight: bold; /* Make text bold */
+        }
+
+        /* Text color for dark mode (white) */
+        .dark .project-box .box-content-header,
+        .dark .project-box .box-content-subheader {
+            color: #ffffff; /* White text in dark mode */
+            font-weight: bold; /* Make text bold */
         }
 
         .app-sidebar {
@@ -327,6 +342,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-weight: bold; /* Make button text bold */
         }
 
         #back-btn:hover {
@@ -346,6 +362,11 @@
         .dark #back-btn:hover {
             background-color: #374151;
         }
+
+        /* Make header and time bold */
+        .projects-section-header p {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -359,7 +380,7 @@
                         <line x1="3" y1="18" x2="21" y2="18"/>
                     </svg>
                 </button>
-                <p class="app-name">Product Dashboard</p>
+                <p class="app-name" style="font-weight: bold;">Product Dashboard</p>
             </div>
             <div class="app-header-right">
                 <div class="search-bar">
@@ -460,7 +481,7 @@
                 <!-- Image Container -->
                 <div id="image-container">
                     <div style="max-width: 800px; margin: 0 auto;"></div>
-                    <h2 id="image-title"></h2>
+                    <h2 id="image-title" style="font-weight: bold;"></h2>
                     <img id="product-image" src="" alt="Product Image">
                     <br>
                     <button id="back-btn" class="show-graph-btn" onclick="goBackToList()">Back to Product List</button>
@@ -471,38 +492,7 @@
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
- 
-        function showProductImage(productName) {
-            fetch(`/product_image/${encodeURIComponent(productName)}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Data from product_image route:", data);
-                    if (data.error) {
-                        alert(data.error);
-                        return;
-                    }
-                    document.getElementById('image-title').innerText = `Image for ${productName}`;
-                    const img = document.getElementById('product-image');
-                    img.src = data.image_url;
-                    img.style.display = 'block';
-                    document.getElementById('image-container').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while fetching the product image.');
-                });
-        }
-
-        function goBackToList() {
-            const imageContainer = document.getElementById('image-container');
-            const productImage = document.getElementById('product-image');
-            const imageTitle = document.getElementById('image-title');
-
-            imageContainer.style.display = 'none';
-            productImage.src = '';
-            imageTitle.innerText = '';
-        }
-
+        
         function filterProjects() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const storeFilter = document.getElementById('store-filter').value.toLowerCase();

@@ -34,7 +34,7 @@ function showProductImage(productName) {
                 alert(data.error);
                 return;
             }
-            document.getElementById('image-title').innerText = `Image for ${productName}`;
+            document.getElementById('image-title').innerText = `Sales Forecast For ${productName}`;
             const img = document.getElementById('product-image');
             img.src = data.image_url;
             img.style.display = 'block';
@@ -54,3 +54,36 @@ function goBackToList() {
     productImage.src = '';
     imageTitle.innerText = '';
 }
+
+
+function filterProjects() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const storeFilter = document.getElementById('store-filter').value.toLowerCase();
+    const allProjects = Array.from(document.querySelectorAll('.project-box-wrapper'));
+
+    allProjects.forEach(project => {
+        const productName = project.dataset.productName.toLowerCase();
+        const category = project.dataset.category.toLowerCase();
+        const store = project.dataset.store.toLowerCase();
+
+        const matchesSearch = productName.includes(searchTerm) || category.includes(searchTerm);
+        const matchesStore = storeFilter === 'all' || store === storeFilter;
+
+        project.style.display = (matchesSearch && matchesStore) ? 'block' : 'none';
+    });
+}
+
+document.getElementById('search-input').addEventListener('input', filterProjects);
+document.getElementById('store-filter').addEventListener('change', filterProjects);
+
+// Toggle sidebar on mobile
+document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+    document.querySelector('.app-sidebar').classList.toggle('active');
+});
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 720 && !e.target.closest('.app-sidebar') && !e.target.closest('.sidebar-toggle')) {
+        document.querySelector('.app-sidebar').classList.remove('active');
+    }
+});

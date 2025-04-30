@@ -142,6 +142,21 @@
             border-radius: 20px;
             transition: background-color 0.3s ease;
         }
+        
+        /* Text color for light mode (black) */
+        .project-box .box-content-header,
+        .project-box .box-content-subheader {
+            color: #000000; /* Black text in light mode */
+            font-weight: bold; /* Make text bold */
+        }
+
+        /* Text color for dark mode (white) */
+        .dark .project-box .box-content-header,
+        .dark .project-box .box-content-subheader {
+            color: #ffffff; /* White text in dark mode */
+            font-weight: bold; /* Make text bold */
+        }
+
 
         .toggle-switch.active {
             background-color: #3a86ff; /* Blue for "on" state (dark mode) */

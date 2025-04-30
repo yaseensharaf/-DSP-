@@ -153,7 +153,22 @@
             justify-content: space-between;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+
         
+        /* Text color for light mode (black) */
+        .project-box .box-content-header,
+        .project-box .box-content-subheader {
+            color: #000000; /* Black text in light mode */
+            font-weight: bold; /* Make text bold */
+        }
+
+        /* Text color for dark mode (white) */
+        .dark .project-box .box-content-header,
+        .dark .project-box .box-content-subheader {
+            color: #ffffff; /* White text in dark mode */
+            font-weight: bold; /* Make text bold */
+        }
+
         .project-box:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
