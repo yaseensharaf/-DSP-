@@ -14,7 +14,7 @@ socketio = SocketIO(app)
 # Load product data from all stores (for all_products.html)
 def get_all_products():
     file_paths = [
-        {'path': 'data/ALL_H&M.csv', 'store': 'H&M', 'category_path': 'data/H_M.csv'},
+        {'path': 'data/HM_All_Product_Sales.csv', 'store': 'H&M', 'category_path': 'data/H_M.csv'},  # Changed from ALL_H&M.csv
         {'path': 'data/ALLRetail_Store_1.csv', 'store': 'Retail Store 1', 'category_path': 'data/R1(main).csv'},
         {'path': 'data/ALLRetail_Store_2.csv', 'store': 'Retail Store 2', 'category_path': 'data/R2.csv'}
     ]
@@ -59,10 +59,10 @@ def get_all_products():
 
 # Load only H&M products from two datasets (for index.html)
 def get_hm_products():
-    all_data_path = 'data/ALL_H&M.csv'  # Sales data, contains ProductName
+    all_data_path = 'data/HM_All_Product_Sales.csv'  # Changed from ALL_H&M.csv
     category_data_path = 'data/H_M.csv'  # Contains ProductName + Category
 
-    # Load ALL_H&M.csv if it exists
+    # Load HM_All_Product_Sales.csv if it exists
     if os.path.exists(all_data_path):
         all_data = pd.read_csv(all_data_path, encoding='ISO-8859-1')
         # Normalize ProductName for consistent matching
@@ -79,7 +79,7 @@ def get_hm_products():
         category_data['ProductName'] = category_data['ProductName'].str.lower().str.strip()
         category_data = category_data[['ProductName', 'Category']].drop_duplicates(subset='ProductName')
 
-    # Merge category info into the ALL_H&M data
+    # Merge category info into the HM_All_Product_Sales data
     if category_data is not None:
         merged = products.merge(category_data, on='ProductName', how='left')
     else:
@@ -102,7 +102,7 @@ def get_hm_products():
 # Load trending products from three datasets
 def get_trending_products(limit=5):
     file_paths = [
-        {'path': 'data/ALL_H&M.csv', 'store': 'H&M'},
+        {'path': 'data/HM_All_Product_Sales.csv', 'store': 'H&M'},  # Changed from ALL_H&M.csv
         {'path': 'data/ALLRetail_Store_1.csv', 'store': 'Retail Store 1'},
         {'path': 'data/ALLRetail_Store_2.csv', 'store': 'Retail Store 2'}
     ]
@@ -135,7 +135,7 @@ def get_trending_products(limit=5):
 
 # Load lowest-selling products from H&M dataset
 def get_lowest_selling_products(limit=5):
-    file_path = 'data/ALL_H&M.csv'
+    file_path = 'data/HM_All_Product_Sales.csv'  # Changed from ALL_H&M.csv
     if os.path.exists(file_path):
         data = pd.read_csv(file_path, encoding='ISO-8859-1')
         if 'Date' not in data.columns or 'Sales' not in data.columns:
@@ -252,7 +252,7 @@ def product_image(product_name):
 def product_sales(product_name):
     from urllib.parse import unquote
     product_name = unquote(product_name)
-    file_paths = ['data/ALL_H&M.csv', 'data/ALLRetail_Store_1.csv', 'data/ALLRetail_Store_2.csv']
+    file_paths = ['data/HM_All_Product_Sales.csv', 'data/ALLRetail_Store_1.csv', 'data/ALLRetail_Store_2.csv']  # Changed from ALL_H&M.csv
     sales_data = []
 
     for file_path in file_paths:
