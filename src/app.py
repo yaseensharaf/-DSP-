@@ -14,7 +14,7 @@ socketio = SocketIO(app)
 # Load product data from all stores (for all_products.html)
 def get_all_products():
     file_paths = [
-        {'path': 'data/HM_All_Product_Sales.csv', 'store': 'H&M', 'category_path': 'data/H_M.csv'},  # Changed from ALL_H&M.csv
+        {'path': 'data/HM_All_Product_Sales.csv', 'store': 'H&M', 'category_path': 'data/H_M.csv'},  
         {'path': 'data/ALLRetail_Store_1.csv', 'store': 'Retail Store 1', 'category_path': 'data/R1(main).csv'},
         {'path': 'data/ALLRetail_Store_2.csv', 'store': 'Retail Store 2', 'category_path': 'data/R2.csv'}
     ]
